@@ -5,10 +5,14 @@ import { ZodTypeProvider } from "fastify-type-provider-zod";
 
 const pokemon: FastifyPluginAsync = async (fastify) => {
   const db = await initORM();
-  fastify.withTypeProvider<ZodTypeProvider>().get(
+  const app = fastify.withTypeProvider<ZodTypeProvider>();
+
+  app.get(
     "/",
     {
       schema: {
+        tags: ["pokemon"],
+        summary: "List pokemons - supports cursor pagination",
         querystring: z.object({
           first: z.coerce.number().min(1).optional().default(10),
           cursor: z.coerce.number().optional().default(0),

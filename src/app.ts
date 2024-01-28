@@ -1,12 +1,16 @@
 import { join } from "path";
 import { RequestContext } from "@mikro-orm/postgresql";
 import AutoLoad, { AutoloadPluginOptions } from "@fastify/autoload";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 import {
+  jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
 } from "fastify-type-provider-zod";
 import { FastifyPluginAsync, FastifyServerOptions } from "fastify";
 import { initORM } from "./database";
+import { env } from "./env";
 
 export interface AppOptions
   extends FastifyServerOptions,
@@ -31,7 +35,30 @@ const app: FastifyPluginAsync<AppOptions> = async (
   fastify.setValidatorCompiler(validatorCompiler);
   fastify.setSerializerCompiler(serializerCompiler);
 
-  // Do not touch the following lines
+  // swagger
+  await fastify.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: "Brainsoft Pokedex API",
+        description: "Code challenge backend service",
+        version: "1.0.0",
+      },
+      tags: [
+        { name: "pokemon", description: "pokemon related end-points" },
+      ],
+    },
+    transform: jsonSchemaTransform,
+  });
+
+  await fastify.register(fastifySwaggerUi, {
+    routePrefix: "/documentation",
+    uiConfig: {
+      docExpansion: "full",
+      deepLinking: false,
+    },
+    staticCSP: true,
+    transformStaticCSP: (header) => header,
+  });
 
   // This loads all plugins defined in plugins
   // those should be support plugins that are reused
@@ -47,6 +74,13 @@ const app: FastifyPluginAsync<AppOptions> = async (
     dir: join(__dirname, "modules"),
     options: opts,
   });
+
+  if (env.NODE_ENV === "development") {
+    fastify.after(() => {
+      console.log("🚀 Swagger ready at http://localhost:3000/documentation");
+      console.log("🚀 Server ready at http://localhost:3000");
+    });
+  }
 };
 
 export default app;
