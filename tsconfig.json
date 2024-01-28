@@ -1,8 +1,12 @@
 {
-  "extends": "fastify-tsconfig",
   "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2022",
+    "strict": true,
     "outDir": "dist",
-    "sourceMap": true
+    "declaration": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
 }

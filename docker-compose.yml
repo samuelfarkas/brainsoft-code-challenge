@@ -11,18 +11,22 @@ services:
       - db:/var/lib/postgresql/data
     expose:
       - 5432
+    ports: # external connection from host
+      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 5s
       timeout: 5s
       retries: 5
   api:
-    user: "fastify"
+    user: "fastify-build"
     build:
       context: .
       target: dev
     env_file:
       - .env.development
+    environment:
+      POSTGRES_HOST: db 
     depends_on:
       db:
         condition: service_healthy
