@@ -13,7 +13,7 @@ EXPOSE 3000
 
 # development stage
 FROM base as dev 
-ENV NODE_ENV=development
+ENV NODE_ENV development
 
 COPY .yarnrc.docker.yml .yarnrc.yml
 RUN --mount=type=bind,source=package.json,target=package.json \
@@ -30,7 +30,7 @@ CMD yarn dev
 
 # production stage
 FROM base as prod 
-ENV NODE_ENV=production
+ENV NODE_ENV production
 
 COPY .yarnrc.docker.yml .yarnrc.yml
 RUN --mount=type=bind,source=package.json,target=package.json \

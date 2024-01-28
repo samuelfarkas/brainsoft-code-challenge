@@ -51,41 +51,23 @@
           "nullable": false,
           "mappedType": "integer"
         },
-        "max_weight": {
-          "name": "max_weight",
-          "type": "int",
+        "weight_kg": {
+          "name": "weight_kg",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
+          "nullable": true,
+          "mappedType": "json"
         },
-        "min_weight": {
-          "name": "min_weight",
-          "type": "int",
+        "height_meters": {
+          "name": "height_meters",
+          "type": "jsonb",
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "max_height": {
-          "name": "max_height",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
-        },
-        "min_height": {
-          "name": "min_height",
-          "type": "int",
-          "unsigned": false,
-          "autoincrement": false,
-          "primary": false,
-          "nullable": false,
-          "mappedType": "integer"
+          "nullable": true,
+          "mappedType": "json"
         }
       },
       "name": "pokemon",

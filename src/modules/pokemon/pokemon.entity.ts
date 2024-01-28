@@ -1,7 +1,16 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Entity,
+  EntityRepositoryType,
+  PrimaryKey,
+  Property,
+  types,
+} from "@mikro-orm/core";
+import { PokemonRepository } from "./pokemon.repository";
 
-@Entity()
+@Entity({ repository: () => PokemonRepository })
 export class Pokemon {
+  [EntityRepositoryType]?: PokemonRepository;
+
   @PrimaryKey()
   id!: number;
 
@@ -17,15 +26,9 @@ export class Pokemon {
   @Property()
   maxHP!: number;
 
-  @Property()
-  maxWeight!: number;
+  @Property({ type: types.json, nullable: true })
+  weightKg?: { maximum: number; minimum: number };
 
-  @Property()
-  minWeight!: number;
-
-  @Property()
-  maxHeight!: number;
-
-  @Property()
-  minHeight!: number;
+  @Property({ type: types.json, nullable: true })
+  heightMeters?: { maximum: number; minimum: number };
 }

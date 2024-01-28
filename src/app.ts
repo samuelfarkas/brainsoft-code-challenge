@@ -1,6 +1,10 @@
 import { join } from "path";
 import { RequestContext } from "@mikro-orm/postgresql";
 import AutoLoad, { AutoloadPluginOptions } from "@fastify/autoload";
+import {
+  serializerCompiler,
+  validatorCompiler,
+} from "fastify-type-provider-zod";
 import { FastifyPluginAsync, FastifyServerOptions } from "fastify";
 import { initORM } from "./database";
 
@@ -24,6 +28,8 @@ const app: FastifyPluginAsync<AppOptions> = async (
   fastify.addHook("onClose", async () => {
     await db.orm.close();
   });
+  fastify.setValidatorCompiler(validatorCompiler);
+  fastify.setSerializerCompiler(serializerCompiler);
 
   // Do not touch the following lines
 
@@ -38,7 +44,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // This loads all plugins defined in routes
   // define your routes in one of these
   void fastify.register(AutoLoad, {
-    dir: join(__dirname, "routes"),
+    dir: join(__dirname, "modules"),
     options: opts,
   });
 };

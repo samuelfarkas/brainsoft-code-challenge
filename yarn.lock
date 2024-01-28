@@ -652,7 +652,7 @@ __metadata:
     fastify: "npm:^4.0.0"
     fastify-cli: "npm:^6.0.1"
     fastify-plugin: "npm:^4.0.0"
-    fastify-tsconfig: "npm:^2.0.0"
+    fastify-type-provider-zod: "npm:^1.1.9"
     ts-node: "npm:^10.4.0"
     typescript: "npm:^5.2.2"
     zod: "npm:^3.22.4"
@@ -1213,10 +1213,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-tsconfig@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "fastify-tsconfig@npm:2.0.0"
-  checksum: 69e7105732c3d6b951a546d34d9efe36beb4569c8324eb439e522ec90a38d3119e6931ee0ad06aae72a390990c68c142c11b8458a72ce74eb5bda155964cf47f
+"fastify-type-provider-zod@npm:^1.1.9":
+  version: 1.1.9
+  resolution: "fastify-type-provider-zod@npm:1.1.9"
+  dependencies:
+    zod-to-json-schema: "npm:^3.17.1"
+  peerDependencies:
+    fastify: ^4.0.0
+    zod: ^3.14.2
+  checksum: 4e43f879d143445e144d3dd3d398c8327f117c4620522653caa82a2a7ea1cfacb29ad6558e78db1dac0a23dfa7d0cacf6a2ea24ad7e0f8478b8c21b0848a834b
   languageName: node
   linkType: hard
 
@@ -3446,6 +3451,15 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"zod-to-json-schema@npm:^3.17.1":
+  version: 3.22.4
+  resolution: "zod-to-json-schema@npm:3.22.4"
+  peerDependencies:
+    zod: ^3.22.4
+  checksum: a949720c165347982a4abf5d612b78bebc2b5fb1217d22e20c024782ce6a9ae0baffe5deb6ba6f961ffa7b28b888c37f744bbfee6d7e9d74f2ec1f94d6968f0d
   languageName: node
   linkType: hard
 
