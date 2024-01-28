@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16.1-alpine3.19
+    restart: always
+    user: postgres
+    env_file:
+      - .env.development
+    volumes:
+      - db:/var/lib/postgresql/data
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  api:
+    user: "fastify"
+    build:
+      context: .
+      target: dev
+    env_file:
+      - .env.development
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./src:/usr/src/app/src
+    ports:
+      - 3000:3000
+
+volumes:
+  db:
