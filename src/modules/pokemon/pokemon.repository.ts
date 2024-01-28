@@ -13,8 +13,8 @@ export class PokemonRepository extends EntityRepository<Pokemon> {
     where: FilterQuery<Pokemon> = {},
   ) {
     return this.findByCursor(where, {
-      after: { id: cursor },
       orderBy: { id: "asc" },
+      ...(cursor && cursor > 0 && { after: { id: cursor } }),
       ...options,
     });
   }
