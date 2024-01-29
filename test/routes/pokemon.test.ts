@@ -15,6 +15,7 @@ describe("pokemon", () => {
         items: Array(5)
           .fill(null)
           .map((_, index) =>
+            // skip check for optional relations due skipped seed control in tests
             expect.objectContaining({
               id: index + 1,
               catalogId: expect.any(String),

@@ -23,6 +23,116 @@
           "primary": false,
           "nullable": false,
           "mappedType": "string"
+        }
+      },
+      "name": "evolution_item",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "evolution_item_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "evolution_item_id": {
+          "name": "evolution_item_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "amount": {
+          "name": "amount",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "pokemon_evolution_requirement",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "pokemon_evolution_requirement_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "pokemon_evolution_requirement_evolution_item_id_foreign": {
+          "constraintName": "pokemon_evolution_requirement_evolution_item_id_foreign",
+          "columnNames": [
+            "evolution_item_id"
+          ],
+          "localTableName": "public.pokemon_evolution_requirement",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.evolution_item",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
         },
         "catalog_id": {
           "name": "catalog_id",
@@ -77,6 +187,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "json"
+        },
+        "evolution_requirements_id": {
+          "name": "evolution_requirements_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": true,
+          "mappedType": "integer"
         }
       },
       "name": "pokemon",
@@ -93,6 +212,16 @@
           "unique": false
         },
         {
+          "columnNames": [
+            "evolution_requirements_id"
+          ],
+          "composite": false,
+          "keyName": "pokemon_evolution_requirements_id_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
           "keyName": "pokemon_pkey",
           "columnNames": [
             "id"
@@ -104,7 +233,165 @@
         }
       ],
       "checks": [],
-      "foreignKeys": {},
+      "foreignKeys": {
+        "pokemon_evolution_requirements_id_foreign": {
+          "constraintName": "pokemon_evolution_requirements_id_foreign",
+          "columnNames": [
+            "evolution_requirements_id"
+          ],
+          "localTableName": "public.pokemon",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon_evolution_requirement",
+          "deleteRule": "set null",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "pokemon_1_id": {
+          "name": "pokemon_1_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "pokemon_2_id": {
+          "name": "pokemon_2_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "pokemon_previous_evolutions",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "pokemon_previous_evolutions_pkey",
+          "columnNames": [
+            "pokemon_1_id",
+            "pokemon_2_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "pokemon_previous_evolutions_pokemon_1_id_foreign": {
+          "constraintName": "pokemon_previous_evolutions_pokemon_1_id_foreign",
+          "columnNames": [
+            "pokemon_1_id"
+          ],
+          "localTableName": "public.pokemon_previous_evolutions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "pokemon_previous_evolutions_pokemon_2_id_foreign": {
+          "constraintName": "pokemon_previous_evolutions_pokemon_2_id_foreign",
+          "columnNames": [
+            "pokemon_2_id"
+          ],
+          "localTableName": "public.pokemon_previous_evolutions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "pokemon_1_id": {
+          "name": "pokemon_1_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "pokemon_2_id": {
+          "name": "pokemon_2_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "pokemon_evolutions",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "pokemon_evolutions_pkey",
+          "columnNames": [
+            "pokemon_1_id",
+            "pokemon_2_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "pokemon_evolutions_pokemon_1_id_foreign": {
+          "constraintName": "pokemon_evolutions_pokemon_1_id_foreign",
+          "columnNames": [
+            "pokemon_1_id"
+          ],
+          "localTableName": "public.pokemon_evolutions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        },
+        "pokemon_evolutions_pokemon_2_id_foreign": {
+          "constraintName": "pokemon_evolutions_pokemon_2_id_foreign",
+          "columnNames": [
+            "pokemon_2_id"
+          ],
+          "localTableName": "public.pokemon_evolutions",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon",
+          "deleteRule": "cascade",
+          "updateRule": "cascade"
+        }
+      },
       "nativeEnums": {
         "attribute_type_enum": [
           "weakness",

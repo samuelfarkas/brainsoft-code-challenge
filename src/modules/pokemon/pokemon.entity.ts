@@ -5,6 +5,7 @@ import {
   HiddenProps,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryKey,
   Property,
   types,
@@ -15,6 +16,7 @@ import {
   PokemonTypeAttributesEnum,
 } from "./pokemonTypeAttribute.entity";
 import { Type } from "./type.entity";
+import { PokemonEvolutionRequirement } from "./pokemonEvolutionRequirement.entity";
 
 @Entity({ repository: () => PokemonRepository })
 export class Pokemon {
@@ -54,6 +56,18 @@ export class Pokemon {
     hidden: true,
   })
   attributes = new Collection<PokemonTypeAttribute>(this);
+
+  @ManyToMany(() => Pokemon)
+  previousEvolutions = new Collection<Pokemon>(this);
+
+  @ManyToMany(() => Pokemon)
+  evolutions = new Collection<Pokemon>(this);
+
+  @OneToOne(() => PokemonEvolutionRequirement, (req) => req.pokemon, {
+    owner: true,
+    nullable: true,
+  })
+  evolutionRequirements?: PokemonEvolutionRequirement;
 
   @Property({ persist: false })
   get resistant(): Type[] {

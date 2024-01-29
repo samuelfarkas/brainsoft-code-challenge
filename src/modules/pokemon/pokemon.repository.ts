@@ -1,4 +1,4 @@
-import { EntityRepository, FilterQuery, Populate } from "@mikro-orm/postgresql";
+import { EntityRepository, FilterQuery, Populate } from "@mikro-orm/core";
 import { Pokemon } from "./pokemon.entity";
 
 export class PokemonRepository extends EntityRepository<Pokemon> {
@@ -19,7 +19,16 @@ export class PokemonRepository extends EntityRepository<Pokemon> {
       ...(populate
         ? { populate }
         : {
-            populate: ["types:ref", "attributes", "attributes.type"],
+            strategy: "joined",
+            populate: [
+              "types",
+              "attributes.type",
+              "evolutions.id",
+              "evolutions.name",
+              "previousEvolutions.id",
+              "evolutionRequirements",
+              "evolutionRequirements.evolutionItem",
+            ],
           }),
       ...(cursor && cursor > 0 && { after: { id: cursor } }),
       ...options,
