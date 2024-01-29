@@ -4,6 +4,7 @@ import {
   EntityRepositoryType,
   HiddenProps,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryKey,
@@ -17,6 +18,7 @@ import {
 } from "./pokemonTypeAttribute.entity";
 import { Type } from "./type.entity";
 import { PokemonEvolutionRequirement } from "./pokemonEvolutionRequirement.entity";
+import { Classification } from "./classification.entity";
 
 @Entity({ repository: () => PokemonRepository })
 export class Pokemon {
@@ -68,6 +70,9 @@ export class Pokemon {
     nullable: true,
   })
   evolutionRequirements?: PokemonEvolutionRequirement;
+
+  @ManyToOne()
+  classification!: Classification;
 
   @Property({ persist: false })
   get resistant(): Type[] {

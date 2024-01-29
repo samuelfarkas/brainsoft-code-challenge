@@ -9,9 +9,11 @@ import {
 import { Type } from "../modules/pokemon/type.entity";
 import { PokemonEvolutionRequirement } from "../modules/pokemon/pokemonEvolutionRequirement.entity";
 import { EvolutionItem } from "../modules/pokemon/evolutionItem.entity";
+import { Classification } from "../modules/pokemon/classification.entity";
 
 type Pokemon = {
   id: string;
+  classification: string;
   name: string;
   fleeRate: number;
   maxCP: number;
@@ -42,6 +44,7 @@ export class PokemonSeeder extends Seeder {
     const typesCache: { [key: string]: Type } = {};
     const pokemonsCache: { [key: number]: PokemonEntity } = {};
     const evolutionItemsCache: { [key: string]: EvolutionItem } = {};
+    const classificationCache: { [key: string]: Classification } = {};
 
     const pokemonsMap = new Map<number, Pokemon>();
     for (const pokemon of PokemonData) {
@@ -61,6 +64,16 @@ export class PokemonSeeder extends Seeder {
       return instance;
     };
 
+    const getOrCreateClassification = (name: string) => {
+      if (classificationCache[name] !== undefined) {
+        return classificationCache[name];
+      }
+      const instance = new Classification(name);
+      classificationCache[name] = instance;
+      em.persist(instance);
+      return instance;
+    };
+
     const getOrCreatePokemon = (id: number) => {
       if (pokemonsCache[id]) {
         return pokemonsCache[id];
@@ -69,6 +82,7 @@ export class PokemonSeeder extends Seeder {
       const pokemon = pokemonsMap.get(id)!;
       wrap(instance).assign({
         name: pokemon.name,
+        classification: getOrCreateClassification(pokemon.classification),
         catalogId: pokemon.id,
         fleeRate: pokemon.fleeRate,
         maxCP: pokemon.maxCP,

@@ -20,6 +20,10 @@ const itemSchema = z.object({
   fleeRate: z.number(),
   maxCP: z.number(),
   maxHP: z.number(),
+  classification: z.object({
+    id: z.number(),
+    name: z.string(),
+  }),
   weightKg: z
     .object({
       maximum: z.number(),

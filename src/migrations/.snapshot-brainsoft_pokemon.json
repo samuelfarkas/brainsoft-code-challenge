@@ -25,6 +25,60 @@
           "mappedType": "string"
         }
       },
+      "name": "classification",
+      "schema": "public",
+      "indexes": [
+        {
+          "columnNames": [
+            "name"
+          ],
+          "composite": false,
+          "keyName": "classification_name_unique",
+          "constraint": true,
+          "primary": false,
+          "unique": true
+        },
+        {
+          "keyName": "classification_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {},
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        }
+      },
       "name": "evolution_item",
       "schema": "public",
       "indexes": [
@@ -196,6 +250,15 @@
           "primary": false,
           "nullable": true,
           "mappedType": "integer"
+        },
+        "classification_id": {
+          "name": "classification_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
         }
       },
       "name": "pokemon",
@@ -245,6 +308,18 @@
           ],
           "referencedTableName": "public.pokemon_evolution_requirement",
           "deleteRule": "set null",
+          "updateRule": "cascade"
+        },
+        "pokemon_classification_id_foreign": {
+          "constraintName": "pokemon_classification_id_foreign",
+          "columnNames": [
+            "classification_id"
+          ],
+          "localTableName": "public.pokemon",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.classification",
           "updateRule": "cascade"
         }
       },

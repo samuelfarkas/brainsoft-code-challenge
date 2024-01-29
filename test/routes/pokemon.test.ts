@@ -22,6 +22,10 @@ describe("pokemon", () => {
               fleeRate: expect.any(Number),
               maxCP: expect.any(Number),
               maxHP: expect.any(Number),
+              classification: {
+                id: expect.any(Number),
+                name: expect.any(String),
+              },
               types: expect.arrayContaining([
                 {
                   id: expect.any(Number),
