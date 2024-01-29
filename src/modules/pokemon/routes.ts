@@ -2,6 +2,7 @@ import { FastifyPluginAsync } from "fastify";
 import { initORM } from "../../database";
 import z from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
+import { Collection } from "@mikro-orm/core";
 
 const pokemon: FastifyPluginAsync = async (fastify) => {
   const db = await initORM();
@@ -41,6 +42,19 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
                     minimum: z.number(),
                   })
                   .optional(),
+                weaknesses: z.array(
+                  z.object({
+                    id: z.number(),
+                    name: z.string(),
+                  }),
+                ),
+                resistant: z.array(
+                  z.object({
+                    id: z.number(),
+                    name: z.string(),
+                  }),
+                ),
+                types: z.instanceof(Collection<{ id: number; name: string }>),
               }),
             ),
           }),

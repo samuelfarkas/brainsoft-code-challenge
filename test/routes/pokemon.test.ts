@@ -21,6 +21,24 @@ describe("pokemon", () => {
               fleeRate: expect.any(Number),
               maxCP: expect.any(Number),
               maxHP: expect.any(Number),
+              types: expect.arrayContaining([
+                {
+                  id: expect.any(Number),
+                  name: expect.any(String),
+                },
+              ]),
+              weaknesses: expect.arrayContaining([
+                {
+                  id: expect.any(Number),
+                  name: expect.any(String),
+                },
+              ]),
+              resistant: expect.arrayContaining([
+                {
+                  id: expect.any(Number),
+                  name: expect.any(String),
+                },
+              ]),
               weightKg: {
                 maximum: expect.any(Number),
                 minimum: expect.any(Number),
@@ -71,5 +89,21 @@ describe("pokemon", () => {
         hasPrevPage: true,
       }),
     );
+  });
+
+  test("pokemon listing - cursor pagination exceeded total count", async () => {
+    const res = await app.inject({
+      url: "/pokemon?first=5&cursor=5",
+    });
+    const payload = res.json();
+    expect(res.statusCode).toEqual(200);
+    expect(payload.items.length).toEqual(5);
+
+    const res2 = await app.inject({
+      url: `/pokemon?first=5&cursor=${payload.totalCount + 1}`,
+    });
+    expect(res2.statusCode).toEqual(200);
+    const payload2 = res2.json();
+    expect(payload2.items.length).toEqual(0);
   });
 });
