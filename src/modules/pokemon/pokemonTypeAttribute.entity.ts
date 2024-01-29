@@ -1,10 +1,4 @@
-import {
-  Cascade,
-  Entity,
-  Enum,
-  ManyToOne,
-  PrimaryKeyProp,
-} from "@mikro-orm/core";
+import { Entity, Enum, ManyToOne, PrimaryKeyProp } from "@mikro-orm/core";
 import { Pokemon } from "./pokemon.entity";
 import { Type } from "./type.entity";
 
@@ -23,9 +17,9 @@ export class PokemonTypeAttribute {
   })
   attributeType!: PokemonTypeAttributesEnum;
 
-  @ManyToOne({ primary: true, cascade: [Cascade.REMOVE] })
+  @ManyToOne({ primary: true })
   pokemon!: Pokemon;
 
-  @ManyToOne({ primary: true, cascade: [Cascade.REMOVE] })
+  @ManyToOne({ primary: true })
   type!: Type;
 }

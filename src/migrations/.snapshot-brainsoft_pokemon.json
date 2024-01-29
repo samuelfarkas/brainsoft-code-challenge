@@ -55,6 +55,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -99,6 +103,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -165,6 +173,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -327,6 +339,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -399,6 +415,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -471,6 +491,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -535,6 +559,10 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -546,7 +574,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "integer"
         },
         "type_id": {
@@ -555,7 +583,7 @@
           "unsigned": false,
           "autoincrement": false,
           "primary": false,
-          "nullable": true,
+          "nullable": false,
           "mappedType": "integer"
         },
         "attribute_type": {
@@ -600,7 +628,7 @@
             "id"
           ],
           "referencedTableName": "public.pokemon",
-          "deleteRule": "cascade"
+          "updateRule": "cascade"
         },
         "pokemon_type_attribute_type_id_foreign": {
           "constraintName": "pokemon_type_attribute_type_id_foreign",
@@ -612,13 +640,17 @@
             "id"
           ],
           "referencedTableName": "public.type",
-          "deleteRule": "cascade"
+          "updateRule": "cascade"
         }
       },
       "nativeEnums": {
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     },
@@ -691,6 +723,177 @@
         "attribute_type_enum": [
           "weakness",
           "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "unsigned": true,
+          "autoincrement": true,
+          "primary": true,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "string"
+        },
+        "type_id": {
+          "name": "type_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "attack",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "attack_pkey",
+          "columnNames": [
+            "id"
+          ],
+          "composite": false,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "attack_type_id_foreign": {
+          "constraintName": "attack_type_id_foreign",
+          "columnNames": [
+            "type_id"
+          ],
+          "localTableName": "public.attack",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.type",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
+        ]
+      }
+    },
+    {
+      "columns": {
+        "pokemon_id": {
+          "name": "pokemon_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "attack_id": {
+          "name": "attack_id",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        },
+        "attack_type": {
+          "name": "attack_type",
+          "type": "attack_type",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "nativeEnumName": "attack_type",
+          "enumItems": [
+            "fast",
+            "special"
+          ],
+          "mappedType": "enum"
+        },
+        "damage": {
+          "name": "damage",
+          "type": "int",
+          "unsigned": false,
+          "autoincrement": false,
+          "primary": false,
+          "nullable": false,
+          "mappedType": "integer"
+        }
+      },
+      "name": "pokemon_attack",
+      "schema": "public",
+      "indexes": [
+        {
+          "keyName": "pokemon_attack_pkey",
+          "columnNames": [
+            "pokemon_id",
+            "attack_id"
+          ],
+          "composite": true,
+          "constraint": true,
+          "primary": true,
+          "unique": true
+        }
+      ],
+      "checks": [],
+      "foreignKeys": {
+        "pokemon_attack_pokemon_id_foreign": {
+          "constraintName": "pokemon_attack_pokemon_id_foreign",
+          "columnNames": [
+            "pokemon_id"
+          ],
+          "localTableName": "public.pokemon_attack",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.pokemon",
+          "updateRule": "cascade"
+        },
+        "pokemon_attack_attack_id_foreign": {
+          "constraintName": "pokemon_attack_attack_id_foreign",
+          "columnNames": [
+            "attack_id"
+          ],
+          "localTableName": "public.pokemon_attack",
+          "referencedColumnNames": [
+            "id"
+          ],
+          "referencedTableName": "public.attack",
+          "updateRule": "cascade"
+        }
+      },
+      "nativeEnums": {
+        "attribute_type_enum": [
+          "weakness",
+          "resistance"
+        ],
+        "attack_type": [
+          "fast",
+          "special"
         ]
       }
     }
@@ -699,6 +902,10 @@
     "attribute_type_enum": [
       "weakness",
       "resistance"
+    ],
+    "attack_type": [
+      "fast",
+      "special"
     ]
   }
 }

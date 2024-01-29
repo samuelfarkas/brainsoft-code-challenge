@@ -19,6 +19,8 @@ import {
 import { Type } from "./type.entity";
 import { PokemonEvolutionRequirement } from "./pokemonEvolutionRequirement.entity";
 import { Classification } from "./classification.entity";
+import { AttackTypeEnum, PokemonAttack } from "./pokemonAttack.entity";
+import { Attack } from "./attack.entity";
 
 @Entity({ repository: () => PokemonRepository })
 export class Pokemon {
@@ -59,6 +61,11 @@ export class Pokemon {
   })
   attributes = new Collection<PokemonTypeAttribute>(this);
 
+  @OneToMany(() => PokemonAttack, (attr) => attr.pokemon, {
+    hidden: true,
+  })
+  pokemonAttacks = new Collection<PokemonAttack>(this);
+
   @ManyToMany(() => Pokemon)
   previousEvolutions = new Collection<Pokemon>(this);
 
@@ -68,13 +75,14 @@ export class Pokemon {
   @OneToOne(() => PokemonEvolutionRequirement, (req) => req.pokemon, {
     owner: true,
     nullable: true,
+    orphanRemoval: true,
   })
   evolutionRequirements?: PokemonEvolutionRequirement;
 
   @ManyToOne()
   classification!: Classification;
 
-  @Property({ persist: false })
+  @Property({ persist: false, lazy: true })
   get resistant(): Type[] {
     return this.attributes
       .filter(
@@ -83,12 +91,34 @@ export class Pokemon {
       .map((attr) => attr.type);
   }
 
-  @Property({ persist: false })
+  @Property({ persist: false, lazy: true })
   get weaknesses(): Type[] {
     return this.attributes
       .filter(
         (attr) => attr.attributeType === PokemonTypeAttributesEnum.WEAKNESS,
       )
       .map((attr) => attr.type);
+  }
+
+  @Property({ persist: false, lazy: true })
+  get attacks(): { special: PokemonAttack[]; fast: PokemonAttack[] } {
+    return this.pokemonAttacks.reduce<{
+      special: PokemonAttack[];
+      fast: PokemonAttack[];
+    }>(
+      (acc, pokemonAttack) => {
+        if (pokemonAttack.attackType === AttackTypeEnum.FAST) {
+          acc.fast.push(pokemonAttack);
+        }
+        if (pokemonAttack.attackType === AttackTypeEnum.SPECIAL) {
+          acc.special.push(pokemonAttack);
+        }
+        return acc;
+      },
+      {
+        special: [],
+        fast: [],
+      },
+    );
   }
 }

@@ -10,6 +10,11 @@ import { Type } from "../modules/pokemon/type.entity";
 import { PokemonEvolutionRequirement } from "../modules/pokemon/pokemonEvolutionRequirement.entity";
 import { EvolutionItem } from "../modules/pokemon/evolutionItem.entity";
 import { Classification } from "../modules/pokemon/classification.entity";
+import { Attack } from "../modules/pokemon/attack.entity";
+import {
+  AttackTypeEnum,
+  PokemonAttack,
+} from "../modules/pokemon/pokemonAttack.entity";
 
 type Pokemon = {
   id: string;
@@ -26,6 +31,10 @@ type Pokemon = {
   "Previous evolution(s)"?: { id: number; name: string }[];
   evolutions?: { id: number; name: string }[];
   evolutionRequirements?: { amount: number; name: string };
+  attacks: {
+    fast: { name: string; type: string; damage: number }[];
+    special: { name: string; type: string; damage: number }[];
+  };
 };
 
 const rangeJsonToNumbers = (range: { maximum: string; minimum: string }) => {
@@ -45,6 +54,7 @@ export class PokemonSeeder extends Seeder {
     const pokemonsCache: { [key: number]: PokemonEntity } = {};
     const evolutionItemsCache: { [key: string]: EvolutionItem } = {};
     const classificationCache: { [key: string]: Classification } = {};
+    const attackCache: { [key: string]: Attack } = {};
 
     const pokemonsMap = new Map<number, Pokemon>();
     for (const pokemon of PokemonData) {
@@ -101,6 +111,20 @@ export class PokemonSeeder extends Seeder {
       }
       const instance = new Type(name);
       typesCache[name] = instance;
+      em.persist(instance);
+      return instance;
+    };
+
+    const getOrCreateAttack = (name: string, type: string) => {
+      if (attackCache[name] !== undefined) {
+        return attackCache[name];
+      }
+      const instance = new Attack();
+      wrap(instance).assign({
+        name,
+        type: getOrCreateType(type),
+      });
+      attackCache[name] = instance;
       em.persist(instance);
       return instance;
     };
@@ -171,6 +195,33 @@ export class PokemonSeeder extends Seeder {
           pokemon: pokemonInstance,
         });
         em.persist(evolutionRequirementInstance);
+      }
+
+      for (const fastAttack of pokemon.attacks.fast) {
+        const attack = getOrCreateAttack(fastAttack.name, fastAttack.type);
+        const pokemonAttack = new PokemonAttack();
+        wrap(pokemonAttack).assign({
+          pokemon: pokemonInstance,
+          attack,
+          damage: fastAttack.damage,
+          attackType: "fast" as AttackTypeEnum.FAST,
+        });
+        em.persist(pokemonAttack);
+      }
+
+      for (const specialAttack of pokemon.attacks.special) {
+        const attack = getOrCreateAttack(
+          specialAttack.name,
+          specialAttack.type,
+        );
+        const pokemonAttack = new PokemonAttack();
+        wrap(pokemonAttack).assign({
+          pokemon: pokemonInstance,
+          attack,
+          damage: specialAttack.damage,
+          attackType: "special" as AttackTypeEnum.SPECIAL,
+        });
+        em.persist(pokemonAttack);
       }
 
       em.persist(pokemonInstance);

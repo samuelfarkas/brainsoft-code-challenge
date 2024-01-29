@@ -48,6 +48,34 @@ const itemSchema = z.object({
       name: z.string(),
     }),
   ),
+  attacks: z.object({
+    fast: z.array(
+      z.object({
+        attack: z.object({
+          id: z.number(),
+          name: z.string(),
+          type: z.object({
+            id: z.number(),
+            name: z.string(),
+          }),
+        }),
+        damage: z.number(),
+      }),
+    ),
+    special: z.array(
+      z.object({
+        attack: z.object({
+          id: z.number(),
+          name: z.string(),
+          type: z.object({
+            id: z.number(),
+            name: z.string(),
+          }),
+        }),
+        damage: z.number(),
+      }),
+    ),
+  }),
   types: z.instanceof(Collection<{ id: number; name: string }>),
   evolutionRequirements: z
     .object({

@@ -22,6 +22,11 @@ export class PokemonRepository extends EntityRepository<Pokemon> {
             strategy: "joined",
             populate: [
               "types",
+              "resistant",
+              "weaknesses",
+              "pokemonAttacks",
+              "pokemonAttacks.attack",
+              "pokemonAttacks.attack.type",
               "classification",
               "attributes.type",
               "evolutions.id",
