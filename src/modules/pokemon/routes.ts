@@ -16,6 +16,7 @@ const simplePokemonCollectionSchema = z
 
 const itemSchema = z.object({
   id: z.number(),
+  name: z.string(),
   rarity: z.nativeEnum(PokemonRarityEnum),
   catalogId: z.string(),
   fleeRate: z.number(),
@@ -121,6 +122,8 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
         querystring: z.object({
           first: z.coerce.number().min(1).optional().default(10),
           cursor: z.coerce.number().optional().default(0),
+          search: z.string().optional(),
+          type: z.coerce.number().optional(),
         }),
         response: {
           200: z.object({
@@ -133,7 +136,19 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
       },
     },
     async (request, reply) => {
-      const data = await db.pokemon.paginateById(request.query);
+      const data = await db.pokemon.paginateById(request.query, {
+        ...(request.query.type && {
+          types: {
+            $some: { id: request.query.type },
+          },
+        }),
+        ...(request.query.search && {
+          name: {
+            // pg_tgrm would be better for this usecase, but lets keep it simple
+            $ilike: `%${request.query.search}%`,
+          },
+        }),
+      });
       const items = z
         .array(
           itemSchema.extend({

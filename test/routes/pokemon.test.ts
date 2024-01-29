@@ -100,4 +100,48 @@ describe("pokemon", () => {
     const payload2 = res2.json();
     expect(payload2.items.length).toEqual(0);
   });
+
+  test("pokemon listing - cursor pagination - type", async () => {
+    const res = await app.inject({
+      url: "/pokemon?first=5&type=10",
+    });
+    const payload: { items: unknown[] } = res.json();
+    expect(res.statusCode).toEqual(200);
+    expect(payload.items.length).toBeGreaterThan(0);
+    expect(payload).toEqual(
+      expect.objectContaining({
+        items: payload.items.map(() =>
+          expect.objectContaining({
+            id: expect.any(Number),
+            types: expect.arrayContaining([
+              expect.objectContaining({
+                id: 10,
+              }),
+            ]),
+          }),
+        ),
+        totalCount: expect.any(Number),
+      }),
+    );
+  });
+
+  test("pokemon listing - cursor pagination - search", async () => {
+    const res = await app.inject({
+      url: "/pokemon?first=5&search=pikachu",
+    });
+    const payload: { items: unknown[] } = res.json();
+    expect(res.statusCode).toEqual(200);
+    expect(payload.items.length).toBeGreaterThan(0);
+    expect(payload).toEqual(
+      expect.objectContaining({
+        items: payload.items.map(() =>
+          expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.stringMatching(/pikachu/i),
+          }),
+        ),
+        totalCount: 1,
+      }),
+    );
+  });
 });
