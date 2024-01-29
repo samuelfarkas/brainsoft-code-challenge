@@ -2,6 +2,7 @@ import {
   Collection,
   Entity,
   EntityRepositoryType,
+  Enum,
   HiddenProps,
   ManyToMany,
   ManyToOne,
@@ -22,6 +23,12 @@ import { Classification } from "./classification.entity";
 import { AttackTypeEnum, PokemonAttack } from "./pokemonAttack.entity";
 import { Attack } from "./attack.entity";
 
+export enum PokemonRarityEnum {
+  COMMON = "common",
+  MYTHIC = "mythic",
+  LEGENDARY = "legendary",
+}
+
 @Entity({ repository: () => PokemonRepository })
 export class Pokemon {
   [EntityRepositoryType]?: PokemonRepository;
@@ -38,6 +45,13 @@ export class Pokemon {
 
   @Property({ type: types.float })
   fleeRate!: number;
+
+  @Enum({
+    nativeEnumName: "pokemon_rarity",
+    items: () => PokemonRarityEnum,
+    default: PokemonRarityEnum.COMMON,
+  })
+  rarity!: PokemonRarityEnum;
 
   @Property()
   maxCP!: number;

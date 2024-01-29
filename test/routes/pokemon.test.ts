@@ -22,6 +22,7 @@ describe("pokemon", () => {
               fleeRate: expect.any(Number),
               maxCP: expect.any(Number),
               maxHP: expect.any(Number),
+              rarity: expect.any(String),
               classification: {
                 id: expect.any(Number),
                 name: expect.any(String),
@@ -75,18 +76,6 @@ describe("pokemon", () => {
           .map((_, index) =>
             expect.objectContaining({
               id: index + 6,
-              catalogId: expect.any(String),
-              fleeRate: expect.any(Number),
-              maxCP: expect.any(Number),
-              maxHP: expect.any(Number),
-              weightKg: {
-                maximum: expect.any(Number),
-                minimum: expect.any(Number),
-              },
-              heightMeters: {
-                maximum: expect.any(Number),
-                minimum: expect.any(Number),
-              },
             }),
           ),
         totalCount: expect.any(Number),

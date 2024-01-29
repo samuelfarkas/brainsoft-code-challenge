@@ -1,6 +1,9 @@
 import { wrap, type EntityManager } from "@mikro-orm/core";
 import { Seeder } from "@mikro-orm/seeder";
-import { Pokemon as PokemonEntity } from "../modules/pokemon/pokemon.entity";
+import {
+  Pokemon as PokemonEntity,
+  PokemonRarityEnum,
+} from "../modules/pokemon/pokemon.entity";
 import PokemonData from "./pokemon.json";
 import {
   PokemonTypeAttribute,
@@ -28,6 +31,8 @@ type Pokemon = {
   resistant: string[];
   weaknesses: string[];
   types: string[];
+  MYTHIC?: string;
+  LEGENDARY?: string;
   "Previous evolution(s)"?: { id: number; name: string }[];
   evolutions?: { id: number; name: string }[];
   evolutionRequirements?: { amount: number; name: string };
@@ -90,8 +95,16 @@ export class PokemonSeeder extends Seeder {
       }
       const instance = new PokemonEntity();
       const pokemon = pokemonsMap.get(id)!;
+      let rarity: PokemonRarityEnum = PokemonRarityEnum.COMMON;
+      if (pokemon.MYTHIC) {
+        rarity = PokemonRarityEnum.MYTHIC;
+      }
+      if (pokemon.LEGENDARY) {
+        rarity = PokemonRarityEnum.LEGENDARY;
+      }
       wrap(instance).assign({
         name: pokemon.name,
+        rarity,
         classification: getOrCreateClassification(pokemon.classification),
         catalogId: pokemon.id,
         fleeRate: pokemon.fleeRate,

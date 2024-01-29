@@ -3,7 +3,7 @@ import { initORM } from "../../database";
 import z from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { Collection } from "@mikro-orm/core";
-import { Pokemon } from "./pokemon.entity";
+import { Pokemon, PokemonRarityEnum } from "./pokemon.entity";
 
 const simplePokemonCollectionSchema = z
   .instanceof(Collection<Pokemon>)
@@ -16,6 +16,7 @@ const simplePokemonCollectionSchema = z
 
 const itemSchema = z.object({
   id: z.number(),
+  rarity: z.nativeEnum(PokemonRarityEnum),
   catalogId: z.string(),
   fleeRate: z.number(),
   maxCP: z.number(),
