@@ -4,7 +4,7 @@ import { initORM } from "../../database";
 import { User } from "./user.entity";
 import z from "zod";
 import { createToken } from "../../lib/token";
-import { authorizationPreParsingHandler } from "../../lib/authorizationPreHandler";
+import { authorizationPreParsingHandler } from "../../lib/authorizationPreParsingHandler";
 
 const user: FastifyPluginAsync = async (fastify) => {
   const db = await initORM();

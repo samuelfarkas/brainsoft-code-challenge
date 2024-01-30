@@ -1,4 +1,11 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import {
+  Collection,
+  Entity,
+  ManyToMany,
+  PrimaryKey,
+  Property,
+} from "@mikro-orm/core";
+import { Pokemon } from "../pokemon/pokemon.entity";
 
 @Entity()
 export class User {
@@ -10,4 +17,7 @@ export class User {
 
   @Property({ onUpdate: () => new Date() })
   updatedAt = new Date();
+
+  @ManyToMany(() => Pokemon)
+  favoritePokemons = new Collection<Pokemon>(this);
 }

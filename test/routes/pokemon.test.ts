@@ -128,7 +128,7 @@ describe("pokemon endpoints", () => {
 
     it("should return paginated pokemon listing filtered by fuzzy search", async () => {
       const res = await app.inject({
-        url: "/pokemons?first=5&search=pikachu",
+        url: "/pokemons?first=5&search=pikach",
       });
       const payload: { items: unknown[] } = res.json();
       expect(res.statusCode).toEqual(200);
@@ -144,6 +144,123 @@ describe("pokemon endpoints", () => {
           totalCount: 1,
         }),
       );
+    });
+
+    it("should return paginated pokemon listing filtered by favorite", async () => {
+      const tokenRes = await app.inject({
+        url: "/user/token",
+        method: "POST",
+      });
+
+      const token = tokenRes.json().token;
+      const favRes = await app.inject({
+        url: "/pokemons/1/favorite",
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      expect(favRes.statusCode).toEqual(204);
+      const favRes2 = await app.inject({
+        url: "/pokemons/2/favorite",
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      expect(favRes2.statusCode).toEqual(204);
+
+      const res = await app.inject({
+        url: "/pokemons?first=5&favorite=true",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      const payload = res.json();
+
+      expect(res.statusCode).toEqual(200);
+      expect(payload.items.length).toEqual(2);
+      expect(payload).toEqual(
+        expect.objectContaining({
+          items: expect.arrayContaining([
+            expect.objectContaining({
+              id: 1,
+            }),
+            expect.objectContaining({
+              id: 2,
+            }),
+          ]),
+        }),
+      );
+    });
+
+    it("should return unauthorized if favorite is set but no token is provided", async () => {
+      const res = await app.inject({
+        url: "/pokemons?first=5&favorite=true",
+      });
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it("should delete favorite pokemon", async () => {
+      const tokenRes = await app.inject({
+        url: "/user/token",
+        method: "POST",
+      });
+
+      const token = tokenRes.json().token;
+      const favRes = await app.inject({
+        url: "/pokemons/1/favorite",
+        method: "PATCH",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      expect(favRes.statusCode).toEqual(204);
+
+      const list1 = await app.inject({
+        url: "/pokemons?first=5&favorite=true",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      expect(list1.statusCode).toEqual(200);
+      const payload = list1.json();
+      expect(payload.items.length).toEqual(1);
+
+      const delFavRes = await app.inject({
+        url: "/pokemons/1/favorite",
+        method: "DELETE",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+
+      expect(delFavRes.statusCode).toEqual(204);
+      const list2 = await app.inject({
+        url: "/pokemons?first=5&favorite=true",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      expect(list2.statusCode).toEqual(200);
+      const payload2 = list2.json();
+      expect(payload2.items.length).toEqual(0);
+    });
+
+    it("should return unauthorized if favorite patch endpoint is called but no token is provided", async () => {
+      const res = await app.inject({
+        url: "/pokemons/1/favorite",
+        method: "PATCH",
+      });
+      expect(res.statusCode).toEqual(401);
+    });
+
+    it("should return unauthorized if favorite delete endpoint is called but no token is provided", async () => {
+      const res = await app.inject({
+        url: "/pokemons/1/favorite",
+        method: "DELETE",
+      });
+      expect(res.statusCode).toEqual(401);
     });
   });
 

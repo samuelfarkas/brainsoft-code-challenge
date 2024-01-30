@@ -64,6 +64,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
       return error;
     }
 
+    if (env.NODE_ENV === "development") {
+      return error;
+    }
+
     reply.status(500).send({ message: "Internal Server Error" });
   });
 

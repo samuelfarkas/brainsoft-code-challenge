@@ -2,8 +2,10 @@ import { FastifyPluginAsync } from "fastify";
 import { initORM } from "../../database";
 import z from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { Collection, NotFoundError } from "@mikro-orm/core";
+import { Collection } from "@mikro-orm/core";
 import { Pokemon, PokemonRarityEnum } from "./pokemon.entity";
+import { authorizationPreParsingHandler } from "../../lib/authorizationPreParsingHandler";
+import { AuthError } from "../../lib/authError";
 
 const simplePokemonCollectionSchema = z
   .instanceof(Collection<Pokemon>)
@@ -124,6 +126,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
           cursor: z.coerce.number().optional().default(0),
           search: z.string().optional(),
           type: z.coerce.number().optional(),
+          favorite: z.coerce.boolean().optional(),
         }),
         response: {
           200: z.object({
@@ -132,6 +135,9 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
             hasPrevPage: z.boolean(),
             items: z.array(responseItem),
           }),
+          401: z.object({
+            message: z.literal("Unauthorized"),
+          }),
           500: z.object({
             message: z.literal("Internal Server Error"),
           }),
@@ -139,7 +145,22 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
       },
     },
     async (request, reply) => {
+      if (request.query.favorite && request.user === undefined) {
+        throw new AuthError();
+      }
+
+      let ids: number[] = [];
+      if (request.query.favorite) {
+        await request.user!.favoritePokemons.init();
+        ids = request.user!.favoritePokemons.getIdentifiers();
+      }
+
       const data = await db.pokemon.paginateById(request.query, {
+        ...(request.query.favorite && {
+          id: {
+            $in: ids,
+          },
+        }),
         ...(request.query.type && {
           types: {
             $some: { id: request.query.type },
@@ -194,9 +215,69 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
     },
   );
 
-  // app.patch("/:id/favorite", {}, async (request, reply) => {});
-  //
-  // app.delete("/:id/favorite", async (request, reply) => {});
+  app.patch(
+    "/:id/favorite",
+    {
+      preParsing: authorizationPreParsingHandler,
+      schema: {
+        tags: ["pokemons"],
+        summary: "Add pokemon to user's favorites",
+        params: z.object({
+          id: z.coerce.number(),
+        }),
+        response: {
+          204: z.undefined(),
+          401: z.object({
+            message: z.literal("Unauthorized"),
+          }),
+          404: z.object({
+            message: z.literal("Not Found"),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      const user = request.user!;
+      const pokemon = await db.pokemon.findOneOrFail(request.params.id);
+      await user.favoritePokemons.init();
+      if (!user.favoritePokemons.contains(pokemon)) {
+        user.favoritePokemons.add(pokemon);
+        await db.em.persistAndFlush(user);
+      }
+      reply.status(204);
+    },
+  );
+
+  app.delete(
+    "/:id/favorite",
+    {
+      preParsing: authorizationPreParsingHandler,
+      schema: {
+        tags: ["pokemons"],
+        summary: "Add pokemon to user's favorites",
+        params: z.object({
+          id: z.coerce.number(),
+        }),
+        response: {
+          204: z.undefined(),
+          404: z.object({
+            message: z.literal("Not Found"),
+          }),
+          401: z.object({
+            message: z.literal("Unauthorized"),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      const user = request.user!;
+      const pokemon = await db.pokemon.findOneOrFail(request.params.id);
+      await user.favoritePokemons.init();
+      user.favoritePokemons.remove(pokemon);
+      await db.em.persistAndFlush(user);
+      reply.status(204);
+    },
+  );
 
   app.get(
     "/name/:name",
