@@ -2,34 +2,34 @@ import {
   MikroORM,
   Options,
   EntityManager,
-  EntityRepository,
-} from "@mikro-orm/postgresql";
-import config from "./mikro-orm.config";
-import { Pokemon } from "./modules/pokemon/pokemon.entity";
-import { PokemonRepository } from "./modules/pokemon/pokemon.repository";
-import { Type } from "./modules/type/type.entity";
-import { User } from "./modules/user/user.entity";
+  EntityRepository
+} from '@mikro-orm/postgresql'
+import config from './mikro-orm.config'
+import { Pokemon } from './modules/pokemon/pokemon.entity'
+import { PokemonRepository } from './modules/pokemon/pokemon.repository'
+import { Type } from './modules/type/type.entity'
+import { User } from './modules/user/user.entity'
 
 export interface Services {
-  orm: MikroORM;
-  em: EntityManager;
-  pokemon: PokemonRepository;
-  type: EntityRepository<Type>;
-  user: EntityRepository<User>;
+  orm: MikroORM
+  em: EntityManager
+  pokemon: PokemonRepository
+  type: EntityRepository<Type>
+  user: EntityRepository<User>
 }
 
-let cache: Services;
+let cache: Services
 
-export async function initORM(options?: Options): Promise<Services> {
+export async function initORM (options?: Options): Promise<Services> {
   if (cache) {
-    return cache;
+    return cache
   }
 
   // allow overriding config options for testing
   const orm = await MikroORM.init({
     ...config,
-    ...options,
-  });
+    ...options
+  })
 
   // save to cache before returning
   return (cache = {
@@ -37,6 +37,6 @@ export async function initORM(options?: Options): Promise<Services> {
     em: orm.em,
     pokemon: orm.em.getRepository(Pokemon),
     type: orm.em.getRepository(Type),
-    user: orm.em.getRepository(User),
-  });
+    user: orm.em.getRepository(User)
+  })
 }

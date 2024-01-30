@@ -1,10 +1,10 @@
-import { AuthError } from "./authError";
-import { User } from "../modules/user/user.entity";
+import { AuthError } from './authError'
+import { User } from '../modules/user/user.entity'
 
 export const authorizationPreParsingHandler = async <T extends { user?: User }>(
-  request: T,
+  request: T
 ) => {
   if (request.user === undefined) {
-    throw new AuthError();
+    throw new AuthError()
   }
-};
+}

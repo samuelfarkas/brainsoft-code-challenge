@@ -1,10 +1,10 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property } from '@mikro-orm/core'
 
 @Entity()
 export class EvolutionItem {
   @PrimaryKey()
-  id!: number;
+    id!: number
 
   @Property()
-  name!: string;
+    name!: string
 }

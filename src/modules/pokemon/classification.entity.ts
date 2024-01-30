@@ -3,22 +3,22 @@ import {
   Entity,
   OneToMany,
   PrimaryKey,
-  Property,
-} from "@mikro-orm/core";
-import { Pokemon } from "./pokemon.entity";
+  Property
+} from '@mikro-orm/core'
+import { Pokemon } from './pokemon.entity'
 
 @Entity()
 export class Classification {
   @PrimaryKey()
-  id!: number;
+    id!: number
 
   @Property({ unique: true })
-  name!: string;
+    name!: string
 
   @OneToMany(() => Pokemon, (pokemon) => pokemon.classification)
-  pokemons = new Collection<Pokemon>(this);
+    pokemons = new Collection<Pokemon>(this)
 
-  constructor(name: string) {
-    this.name = name;
+  constructor (name: string) {
+    this.name = name
   }
 }

@@ -1,28 +1,28 @@
-import { Entity, Enum, ManyToOne, PrimaryKeyProp, Property } from "@mikro-orm/core";
-import { Pokemon } from "./pokemon.entity";
-import { Attack } from "./attack.entity";
+import { Entity, Enum, ManyToOne, PrimaryKeyProp, Property } from '@mikro-orm/core'
+import { Pokemon } from './pokemon.entity'
+import { Attack } from './attack.entity'
 
 export enum AttackTypeEnum {
-  FAST = "fast",
-  SPECIAL = "special",
+  FAST = 'fast',
+  SPECIAL = 'special',
 }
 
 @Entity()
 export class PokemonAttack {
-  [PrimaryKeyProp]?: ["pokemon", "attack"];
+  [PrimaryKeyProp]?: ['pokemon', 'attack']
 
   @Enum({
     items: () => AttackTypeEnum,
-    nativeEnumName: "attack_type",
+    nativeEnumName: 'attack_type'
   })
-  attackType!: AttackTypeEnum;
+    attackType!: AttackTypeEnum
 
   @Property()
-  damage!: number;
+    damage!: number
 
   @ManyToOne({ primary: true })
-  pokemon!: Pokemon;
+    pokemon!: Pokemon
 
   @ManyToOne({ primary: true })
-  attack!: Attack;
+    attack!: Attack
 }

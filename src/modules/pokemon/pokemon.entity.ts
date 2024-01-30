@@ -10,128 +10,128 @@ import {
   OneToOne,
   PrimaryKey,
   Property,
-  types,
-} from "@mikro-orm/core";
-import { PokemonRepository } from "./pokemon.repository";
+  types
+} from '@mikro-orm/core'
+import { PokemonRepository } from './pokemon.repository'
 import {
   PokemonTypeAttribute,
-  PokemonTypeAttributesEnum,
-} from "./pokemonTypeAttribute.entity";
-import { Type } from "../type/type.entity";
-import { PokemonEvolutionRequirement } from "./pokemonEvolutionRequirement.entity";
-import { Classification } from "./classification.entity";
-import { AttackTypeEnum, PokemonAttack } from "./pokemonAttack.entity";
+  PokemonTypeAttributesEnum
+} from './pokemonTypeAttribute.entity'
+import { Type } from '../type/type.entity'
+import { PokemonEvolutionRequirement } from './pokemonEvolutionRequirement.entity'
+import { Classification } from './classification.entity'
+import { AttackTypeEnum, PokemonAttack } from './pokemonAttack.entity'
 
 export enum PokemonRarityEnum {
-  COMMON = "common",
-  MYTHIC = "mythic",
-  LEGENDARY = "legendary",
+  COMMON = 'common',
+  MYTHIC = 'mythic',
+  LEGENDARY = 'legendary',
 }
 
 @Entity({ repository: () => PokemonRepository })
 export class Pokemon {
   [EntityRepositoryType]?: PokemonRepository;
-  [HiddenProps]?: "attributes";
+  [HiddenProps]?: 'attributes'
 
   @PrimaryKey()
-  id!: number;
+    id!: number
 
   @Property({ index: true })
-  name!: string;
+    name!: string
 
   @Property()
-  catalogId!: string;
+    catalogId!: string
 
   @Property({ type: types.float })
-  fleeRate!: number;
+    fleeRate!: number
 
   @Enum({
-    nativeEnumName: "pokemon_rarity",
+    nativeEnumName: 'pokemon_rarity',
     items: () => PokemonRarityEnum,
-    default: PokemonRarityEnum.COMMON,
+    default: PokemonRarityEnum.COMMON
   })
-  rarity!: PokemonRarityEnum;
+    rarity!: PokemonRarityEnum
 
   @Property()
-  maxCP!: number;
+    maxCP!: number
 
   @Property()
-  maxHP!: number;
+    maxHP!: number
 
   @Property({ type: types.json, nullable: true })
-  weightKg?: { maximum: number; minimum: number };
+    weightKg?: { maximum: number, minimum: number }
 
   @Property({ type: types.json, nullable: true })
-  heightMeters?: { maximum: number; minimum: number };
+    heightMeters?: { maximum: number, minimum: number }
 
   @ManyToMany(() => Type, (type) => type.pokemons, {
-    owner: true,
+    owner: true
   })
-  types = new Collection<Type>(this);
+    types = new Collection<Type>(this)
 
   @OneToMany(() => PokemonTypeAttribute, (attr) => attr.pokemon, {
-    hidden: true,
+    hidden: true
   })
-  attributes = new Collection<PokemonTypeAttribute>(this);
+    attributes = new Collection<PokemonTypeAttribute>(this)
 
   @OneToMany(() => PokemonAttack, (attr) => attr.pokemon, {
-    hidden: true,
+    hidden: true
   })
-  pokemonAttacks = new Collection<PokemonAttack>(this);
+    pokemonAttacks = new Collection<PokemonAttack>(this)
 
   @ManyToMany(() => Pokemon)
-  previousEvolutions = new Collection<Pokemon>(this);
+    previousEvolutions = new Collection<Pokemon>(this)
 
   @ManyToMany(() => Pokemon)
-  evolutions = new Collection<Pokemon>(this);
+    evolutions = new Collection<Pokemon>(this)
 
   @OneToOne(() => PokemonEvolutionRequirement, (req) => req.pokemon, {
     owner: true,
     nullable: true,
-    orphanRemoval: true,
+    orphanRemoval: true
   })
-  evolutionRequirements?: PokemonEvolutionRequirement;
+    evolutionRequirements?: PokemonEvolutionRequirement
 
   @ManyToOne()
-  classification!: Classification;
+    classification!: Classification
 
   @Property({ persist: false, lazy: true })
-  get resistant(): Type[] {
+  get resistant (): Type[] {
     return this.attributes
       .filter(
-        (attr) => attr.attributeType === PokemonTypeAttributesEnum.RESISTANCE,
+        (attr) => attr.attributeType === PokemonTypeAttributesEnum.RESISTANCE
       )
-      .map((attr) => attr.type);
+      .map((attr) => attr.type)
   }
 
   @Property({ persist: false, lazy: true })
-  get weaknesses(): Type[] {
+  get weaknesses (): Type[] {
     return this.attributes
       .filter(
-        (attr) => attr.attributeType === PokemonTypeAttributesEnum.WEAKNESS,
+        (attr) => attr.attributeType === PokemonTypeAttributesEnum.WEAKNESS
       )
-      .map((attr) => attr.type);
+      .map((attr) => attr.type)
   }
 
   @Property({ persist: false, lazy: true })
-  get attacks(): { special: PokemonAttack[]; fast: PokemonAttack[] } {
+  get attacks (): { special: PokemonAttack[], fast: PokemonAttack[] } {
     return this.pokemonAttacks.reduce<{
-      special: PokemonAttack[];
-      fast: PokemonAttack[];
+      special: PokemonAttack[]
+      fast: PokemonAttack[]
     }>(
       (acc, pokemonAttack) => {
         if (pokemonAttack.attackType === AttackTypeEnum.FAST) {
-          acc.fast.push(pokemonAttack);
+          acc.fast.push(pokemonAttack)
         }
         if (pokemonAttack.attackType === AttackTypeEnum.SPECIAL) {
-          acc.special.push(pokemonAttack);
+          acc.special.push(pokemonAttack)
         }
-        return acc;
+        return acc
       },
       {
         special: [],
-        fast: [],
-      },
-    );
+        fast: []
+      }
+    )
   }
 }

@@ -3,22 +3,22 @@ import {
   ManyToOne,
   OneToOne,
   PrimaryKey,
-  Property,
-} from "@mikro-orm/core";
-import { Pokemon } from "./pokemon.entity";
-import { EvolutionItem } from "./evolutionItem.entity";
+  Property
+} from '@mikro-orm/core'
+import { Pokemon } from './pokemon.entity'
+import { EvolutionItem } from './evolutionItem.entity'
 
 @Entity()
 export class PokemonEvolutionRequirement {
   @PrimaryKey()
-  id!: number;
+    id!: number
 
   @OneToOne(() => Pokemon, (pokemon) => pokemon.evolutionRequirements)
-  pokemon!: Pokemon;
+    pokemon!: Pokemon
 
   @ManyToOne()
-  evolutionItem!: EvolutionItem;
+    evolutionItem!: EvolutionItem
 
   @Property()
-  amount!: number;
+    amount!: number
 }
