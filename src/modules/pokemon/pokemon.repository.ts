@@ -7,6 +7,22 @@ import {
 } from "@mikro-orm/core";
 import { Pokemon } from "./pokemon.entity";
 
+const relations = [
+  "types",
+  "resistant",
+  "weaknesses",
+  "pokemonAttacks",
+  "pokemonAttacks.attack",
+  "pokemonAttacks.attack.type",
+  "classification",
+  "attributes.type",
+  "evolutions.id",
+  "evolutions.name",
+  "previousEvolutions.id",
+  "evolutionRequirements",
+  "evolutionRequirements.evolutionItem",
+] as const;
+
 export class PokemonRepository extends EntityRepository<Pokemon> {
   public async paginateById(
     {
@@ -26,25 +42,31 @@ export class PokemonRepository extends EntityRepository<Pokemon> {
         ? { populate }
         : {
             strategy: "joined",
-            populate: [
-              "types",
-              "resistant",
-              "weaknesses",
-              "pokemonAttacks",
-              "pokemonAttacks.attack",
-              "pokemonAttacks.attack.type",
-              "classification",
-              "attributes.type",
-              "evolutions.id",
-              "evolutions.name",
-              "previousEvolutions.id",
-              "evolutionRequirements",
-              "evolutionRequirements.evolutionItem",
-            ],
+            populate: relations,
           }),
       ...(cursor && cursor > 0 && { after: { id: cursor } }),
       ...options,
     });
+  }
+
+  public findById(
+    id: number,
+    { populate, ...options }: FindOneOrFailOptions<Pokemon> = {},
+  ) {
+    return this.findOneOrFail(
+      {
+        id,
+      },
+      {
+        ...(populate
+          ? { populate }
+          : {
+              strategy: "joined",
+              populate: relations,
+            }),
+        ...options,
+      },
+    );
   }
 
   public async findByName(
@@ -60,21 +82,7 @@ export class PokemonRepository extends EntityRepository<Pokemon> {
           ? { populate }
           : {
               strategy: "joined",
-              populate: [
-                "types",
-                "resistant",
-                "weaknesses",
-                "pokemonAttacks",
-                "pokemonAttacks.attack",
-                "pokemonAttacks.attack.type",
-                "classification",
-                "attributes.type",
-                "evolutions.id",
-                "evolutions.name",
-                "previousEvolutions.id",
-                "evolutionRequirements",
-                "evolutionRequirements.evolutionItem",
-              ],
+              populate: relations,
             }),
         ...options,
       },

@@ -1,6 +1,142 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`pokemon endpoints pokemon by name pokemon by name 1`] = `
+exports[`pokemon endpoints pokemon by id should find pokemon by id 1`] = `
+{
+  "attacks": {
+    "fast": [
+      {
+        "attack": {
+          "id": 2,
+          "name": "Vine Whip",
+          "type": {
+            "id": 1,
+            "name": "Grass",
+          },
+        },
+        "damage": 7,
+      },
+      {
+        "attack": {
+          "id": 6,
+          "name": "Razor Leaf",
+          "type": {
+            "id": 1,
+            "name": "Grass",
+          },
+        },
+        "damage": 15,
+      },
+    ],
+    "special": [
+      {
+        "attack": {
+          "id": 5,
+          "name": "Sludge Bomb",
+          "type": {
+            "id": 2,
+            "name": "Poison",
+          },
+        },
+        "damage": 55,
+      },
+      {
+        "attack": {
+          "id": 7,
+          "name": "Solar Beam",
+          "type": {
+            "id": 1,
+            "name": "Grass",
+          },
+        },
+        "damage": 120,
+      },
+      {
+        "attack": {
+          "id": 8,
+          "name": "Petal Blizzard",
+          "type": {
+            "id": 1,
+            "name": "Grass",
+          },
+        },
+        "damage": 65,
+      },
+    ],
+  },
+  "catalogId": "003",
+  "classification": {
+    "id": 1,
+    "name": "Seed Pokémon",
+  },
+  "evolutionRequirements": null,
+  "fleeRate": 0.05,
+  "heightMeters": {
+    "maximum": 2.25,
+    "minimum": 1.75,
+  },
+  "id": 1,
+  "maxCP": 2392,
+  "maxHP": 2580,
+  "name": "Venusaur",
+  "rarity": "common",
+  "resistant": [
+    {
+      "id": 4,
+      "name": "Water",
+    },
+    {
+      "id": 5,
+      "name": "Electric",
+    },
+    {
+      "id": 1,
+      "name": "Grass",
+    },
+    {
+      "id": 6,
+      "name": "Fighting",
+    },
+    {
+      "id": 7,
+      "name": "Fairy",
+    },
+  ],
+  "types": [
+    {
+      "id": 1,
+      "name": "Grass",
+    },
+    {
+      "id": 2,
+      "name": "Poison",
+    },
+  ],
+  "weaknesses": [
+    {
+      "id": 8,
+      "name": "Fire",
+    },
+    {
+      "id": 9,
+      "name": "Ice",
+    },
+    {
+      "id": 12,
+      "name": "Flying",
+    },
+    {
+      "id": 13,
+      "name": "Psychic",
+    },
+  ],
+  "weightKg": {
+    "maximum": 112.5,
+    "minimum": 87.5,
+  },
+}
+`;
+
+exports[`pokemon endpoints pokemon by name should find pokemon by name 1`] = `
 {
   "attacks": {
     "fast": [

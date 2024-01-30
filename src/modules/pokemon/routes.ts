@@ -169,6 +169,43 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
   );
 
   app.get(
+    "/:id",
+    {
+      schema: {
+        tags: ["pokemon"],
+        summary: "Get pokemon by name",
+        params: z.object({
+          id: z.coerce.number(),
+        }),
+        response: {
+          200: responseItem,
+          404: z.object({
+            message: z.literal("Not Found"),
+          }),
+          500: z.object({
+            message: z.literal("Internal Server Error"),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      try {
+        const pokemon = await db.pokemon.findById(request.params.id);
+        reply.send(itemSchema.parse(pokemon));
+      } catch (error) {
+        if (error instanceof NotFoundError) {
+          reply.status(404).send({
+            message: "Not Found",
+          });
+        }
+        reply.status(500).send({
+          message: "Internal Server Error",
+        });
+      }
+    },
+  );
+
+  app.get(
     "/name/:name",
     {
       schema: {
