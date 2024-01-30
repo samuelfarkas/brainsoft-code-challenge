@@ -1,5 +1,5 @@
 import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
-import { Type } from "./type.entity";
+import { Type } from "../type/type.entity";
 
 @Entity()
 export class Attack {

@@ -1,6 +1,6 @@
 import { Entity, Enum, ManyToOne, PrimaryKeyProp } from "@mikro-orm/core";
 import { Pokemon } from "./pokemon.entity";
-import { Type } from "./type.entity";
+import { Type } from "../type/type.entity";
 
 export enum PokemonTypeAttributesEnum {
   WEAKNESS = "weakness",

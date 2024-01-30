@@ -5,7 +5,7 @@ import {
   PrimaryKey,
   Property,
 } from "@mikro-orm/core";
-import { Pokemon } from "./pokemon.entity";
+import { Pokemon } from "../pokemon/pokemon.entity";
 
 @Entity()
 export class Type {

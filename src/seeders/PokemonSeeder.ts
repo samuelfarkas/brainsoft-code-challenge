@@ -9,7 +9,7 @@ import {
   PokemonTypeAttribute,
   PokemonTypeAttributesEnum,
 } from "../modules/pokemon/pokemonTypeAttribute.entity";
-import { Type } from "../modules/pokemon/type.entity";
+import { Type } from "../modules/type/type.entity";
 import { PokemonEvolutionRequirement } from "../modules/pokemon/pokemonEvolutionRequirement.entity";
 import { EvolutionItem } from "../modules/pokemon/evolutionItem.entity";
 import { Classification } from "../modules/pokemon/classification.entity";

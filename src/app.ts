@@ -43,7 +43,10 @@ const app: FastifyPluginAsync<AppOptions> = async (
         description: "Code challenge backend service",
         version: "1.0.0",
       },
-      tags: [{ name: "pokemons", description: "pokemon related end-points" }],
+      tags: [
+        { name: "pokemons", description: "pokemon related end-points" },
+        { name: "types", description: "pokemon type related end-points" },
+      ],
     },
     transform: jsonSchemaTransform,
   });

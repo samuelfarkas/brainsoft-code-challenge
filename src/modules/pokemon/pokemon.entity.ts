@@ -17,11 +17,10 @@ import {
   PokemonTypeAttribute,
   PokemonTypeAttributesEnum,
 } from "./pokemonTypeAttribute.entity";
-import { Type } from "./type.entity";
+import { Type } from "../type/type.entity";
 import { PokemonEvolutionRequirement } from "./pokemonEvolutionRequirement.entity";
 import { Classification } from "./classification.entity";
 import { AttackTypeEnum, PokemonAttack } from "./pokemonAttack.entity";
-import { Attack } from "./attack.entity";
 
 export enum PokemonRarityEnum {
   COMMON = "common",

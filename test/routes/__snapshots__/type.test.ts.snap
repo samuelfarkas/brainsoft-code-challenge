@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`type endpoints should return all types 1`] = `
+[
+  {
+    "id": 1,
+    "name": "Grass",
+  },
+  {
+    "id": 2,
+    "name": "Poison",
+  },
+  {
+    "id": 3,
+    "name": "Normal",
+  },
+  {
+    "id": 4,
+    "name": "Water",
+  },
+  {
+    "id": 5,
+    "name": "Electric",
+  },
+  {
+    "id": 6,
+    "name": "Fighting",
+  },
+  {
+    "id": 7,
+    "name": "Fairy",
+  },
+  {
+    "id": 8,
+    "name": "Fire",
+  },
+  {
+    "id": 9,
+    "name": "Ice",
+  },
+  {
+    "id": 10,
+    "name": "Bug",
+  },
+  {
+    "id": 11,
+    "name": "Dragon",
+  },
+  {
+    "id": 12,
+    "name": "Flying",
+  },
+  {
+    "id": 13,
+    "name": "Psychic",
+  },
+  {
+    "id": 14,
+    "name": "Steel",
+  },
+  {
+    "id": 15,
+    "name": "Ground",
+  },
+  {
+    "id": 16,
+    "name": "Rock",
+  },
+  {
+    "id": 17,
+    "name": "Dark",
+  },
+  {
+    "id": 18,
+    "name": "Ghost",
+  },
+]
+`;
