@@ -5,6 +5,7 @@ const app = build();
 describe("user endpoints", () => {
   it("should return user bearer token", async () => {
     const res = await app.inject({
+      method: "POST",
       url: "/user/token",
     });
     const payload = res.json();
@@ -18,6 +19,7 @@ describe("user endpoints", () => {
 
   it("should return user entity", async () => {
     const res = await app.inject({
+      method: "POST",
       url: "/user/token",
     });
     const payload = res.json();

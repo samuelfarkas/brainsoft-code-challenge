@@ -9,7 +9,7 @@ const user: FastifyPluginAsync = async (fastify) => {
   const db = await initORM();
   const app = fastify.withTypeProvider<ZodTypeProvider>();
 
-  app.get(
+  app.post(
     "/token",
     {
       schema: {
