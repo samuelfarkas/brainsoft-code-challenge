@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`pokemon endpoints pokemon by name pokemon by name 1`] = `
+{
+  "attacks": {
+    "fast": [
+      {
+        "attack": {
+          "id": 38,
+          "name": "Quick Attack",
+          "type": {
+            "id": 3,
+            "name": "Normal",
+          },
+        },
+        "damage": 10,
+      },
+      {
+        "attack": {
+          "id": 54,
+          "name": "Thunder Shock",
+          "type": {
+            "id": 5,
+            "name": "Electric",
+          },
+        },
+        "damage": 5,
+      },
+    ],
+    "special": [
+      {
+        "attack": {
+          "id": 55,
+          "name": "Discharge",
+          "type": {
+            "id": 5,
+            "name": "Electric",
+          },
+        },
+        "damage": 35,
+      },
+      {
+        "attack": {
+          "id": 56,
+          "name": "Thunder",
+          "type": {
+            "id": 5,
+            "name": "Electric",
+          },
+        },
+        "damage": 100,
+      },
+      {
+        "attack": {
+          "id": 57,
+          "name": "Thunderbolt",
+          "type": {
+            "id": 5,
+            "name": "Electric",
+          },
+        },
+        "damage": 55,
+      },
+    ],
+  },
+  "catalogId": "025",
+  "classification": {
+    "id": 24,
+    "name": "Mouse Pokémon",
+  },
+  "evolutionRequirements": {
+    "amount": 50,
+    "evolutionItem": {
+      "id": 17,
+      "name": "Pikachu candies",
+    },
+  },
+  "fleeRate": 0.1,
+  "heightMeters": {
+    "maximum": 0.45,
+    "minimum": 0.35,
+  },
+  "id": 38,
+  "maxCP": 777,
+  "maxHP": 887,
+  "name": "Pikachu",
+  "rarity": "common",
+  "resistant": [
+    {
+      "id": 5,
+      "name": "Electric",
+    },
+    {
+      "id": 12,
+      "name": "Flying",
+    },
+    {
+      "id": 14,
+      "name": "Steel",
+    },
+  ],
+  "types": [
+    {
+      "id": 5,
+      "name": "Electric",
+    },
+  ],
+  "weaknesses": [
+    {
+      "id": 15,
+      "name": "Ground",
+    },
+  ],
+  "weightKg": {
+    "maximum": 6.75,
+    "minimum": 5.25,
+  },
+}
+`;

@@ -2,7 +2,7 @@ import { FastifyPluginAsync } from "fastify";
 import { initORM } from "../../database";
 import z from "zod";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
-import { Collection } from "@mikro-orm/core";
+import { Collection, NotFoundError } from "@mikro-orm/core";
 import { Pokemon, PokemonRarityEnum } from "./pokemon.entity";
 
 const simplePokemonCollectionSchema = z
@@ -132,6 +132,9 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
             hasPrevPage: z.boolean(),
             items: z.array(responseItem),
           }),
+          500: z.object({
+            message: z.literal("Internal Server Error"),
+          }),
         },
       },
     },
@@ -145,7 +148,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
         ...(request.query.search && {
           name: {
             // pg_tgrm would be better for this usecase, but lets keep it simple
-            $ilike: `%${request.query.search}%`,
+            $ilike: `${request.query.search}%`,
           },
         }),
       });
@@ -158,10 +161,47 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
         )
         .parse(data.items);
 
-      reply.status(200).send({
+      reply.send({
         ...data,
         items,
       });
+    },
+  );
+
+  app.get(
+    "/name/:name",
+    {
+      schema: {
+        tags: ["pokemon"],
+        summary: "Get pokemon by name",
+        params: z.object({
+          name: z.string(),
+        }),
+        response: {
+          200: responseItem,
+          404: z.object({
+            message: z.literal("Not Found"),
+          }),
+          500: z.object({
+            message: z.literal("Internal Server Error"),
+          }),
+        },
+      },
+    },
+    async (request, reply) => {
+      try {
+        const pokemon = await db.pokemon.findByName(request.params.name);
+        reply.send(itemSchema.parse(pokemon));
+      } catch (error) {
+        if (error instanceof NotFoundError) {
+          reply.status(404).send({
+            message: "Not Found",
+          });
+        }
+        reply.status(500).send({
+          message: "Internal Server Error",
+        });
+      }
     },
   );
 };
