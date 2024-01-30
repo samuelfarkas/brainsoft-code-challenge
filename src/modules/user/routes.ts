@@ -1,9 +1,10 @@
 import { FastifyPluginAsync } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod";
 import { initORM } from "../../database";
-import { createToken, verifyToken } from "./token";
 import { User } from "./user.entity";
 import z from "zod";
+import { createToken } from "../../lib/token";
+import { authorizationPreParsingHandler } from "../../lib/authorizationPreHandler";
 
 const user: FastifyPluginAsync = async (fastify) => {
   const db = await initORM();
@@ -33,6 +34,7 @@ const user: FastifyPluginAsync = async (fastify) => {
   app.get(
     "/",
     {
+      preParsing: authorizationPreParsingHandler,
       schema: {
         tags: ["user"],
         summary: "Get user",
@@ -52,17 +54,7 @@ const user: FastifyPluginAsync = async (fastify) => {
       },
     },
     async (request, reply) => {
-      try {
-        const userData = verifyToken(
-          request.headers.authorization.split(" ")[1],
-        );
-        const user = await db.em.findOneOrFail(User, userData.userId);
-        reply.send(user);
-      } catch (e) {
-        reply.status(401).send({
-          message: "Unauthorized",
-        });
-      }
+      reply.send(request.user);
     },
   );
 };

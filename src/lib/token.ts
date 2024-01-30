@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { env } from "../../env";
+import { env } from "../env";
 
 export const createToken = (userId: number) => {
   const cipher = crypto.createCipheriv(

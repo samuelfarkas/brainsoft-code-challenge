@@ -1,5 +1,5 @@
 import { join } from "path";
-import { RequestContext } from "@mikro-orm/postgresql";
+import { NotFoundError, RequestContext } from "@mikro-orm/postgresql";
 import AutoLoad, { AutoloadPluginOptions } from "@fastify/autoload";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
@@ -11,7 +11,16 @@ import {
 import { FastifyPluginAsync, FastifyServerOptions } from "fastify";
 import { initORM } from "./database";
 import { env } from "./env";
+import { verifyToken } from "./lib/token";
+import { User } from "./modules/user/user.entity";
+import { AuthError } from "./lib/authError";
+import { ZodError } from "zod";
 
+declare module "fastify" {
+  export interface FastifyRequest {
+    user?: User;
+  }
+}
 export interface AppOptions
   extends FastifyServerOptions,
     Partial<AutoloadPluginOptions> {}
@@ -26,6 +35,36 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // register request context hook
   fastify.addHook("onRequest", (_request, _reply, done) => {
     RequestContext.create(db.em, done);
+  });
+
+  // register pseudo baerer token auth
+  fastify.addHook("onRequest", async (request, reply) => {
+    const token = request.headers.authorization?.split(" ")[1];
+    if (token) {
+      try {
+        const userData = verifyToken(token);
+        const user = await db.user.findOneOrFail(userData.userId);
+        request.user = user;
+      } catch (error) {
+        throw new AuthError();
+      }
+    }
+  });
+
+  fastify.setErrorHandler((error, _request, reply) => {
+    if (error instanceof AuthError) {
+      return reply.status(401).send({ message: error.message });
+    }
+
+    if (error instanceof NotFoundError) {
+      return reply.status(404).send({ message: "Not Found" });
+    }
+
+    if (error instanceof ZodError) {
+      return error;
+    }
+
+    reply.status(500).send({ message: "Internal Server Error" });
   });
 
   // shut down the connection when closing the app

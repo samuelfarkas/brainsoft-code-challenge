@@ -189,21 +189,14 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
       },
     },
     async (request, reply) => {
-      try {
-        const pokemon = await db.pokemon.findById(request.params.id);
-        reply.send(itemSchema.parse(pokemon));
-      } catch (error) {
-        if (error instanceof NotFoundError) {
-          reply.status(404).send({
-            message: "Not Found",
-          });
-        }
-        reply.status(500).send({
-          message: "Internal Server Error",
-        });
-      }
+      const pokemon = await db.pokemon.findById(request.params.id);
+      reply.send(itemSchema.parse(pokemon));
     },
   );
+
+  // app.patch("/:id/favorite", {}, async (request, reply) => {});
+  //
+  // app.delete("/:id/favorite", async (request, reply) => {});
 
   app.get(
     "/name/:name",
@@ -226,19 +219,8 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
       },
     },
     async (request, reply) => {
-      try {
-        const pokemon = await db.pokemon.findByName(request.params.name);
-        reply.send(itemSchema.parse(pokemon));
-      } catch (error) {
-        if (error instanceof NotFoundError) {
-          reply.status(404).send({
-            message: "Not Found",
-          });
-        }
-        reply.status(500).send({
-          message: "Internal Server Error",
-        });
-      }
+      const pokemon = await db.pokemon.findByName(request.params.name);
+      reply.send(itemSchema.parse(pokemon));
     },
   );
 };
