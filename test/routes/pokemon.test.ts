@@ -6,7 +6,7 @@ describe("pokemon endpoints", () => {
   describe("pokemon listing", () => {
     it("should return pokemon listing paginated - first page", async () => {
       const res = await app.inject({
-        url: "/pokemon?first=5",
+        url: "/pokemons?first=5",
       });
       const payload = res.json();
       expect(res.statusCode).toEqual(200);
@@ -65,7 +65,7 @@ describe("pokemon endpoints", () => {
 
     it("should return pokemon listing - second page", async () => {
       const res = await app.inject({
-        url: "/pokemon?first=5&cursor=5",
+        url: "/pokemons?first=5&cursor=5",
       });
       const payload = res.json();
       expect(res.statusCode).toEqual(200);
@@ -88,14 +88,14 @@ describe("pokemon endpoints", () => {
 
     it("should return empty list if cursor exceedes number of items", async () => {
       const res = await app.inject({
-        url: "/pokemon?first=5&cursor=5",
+        url: "/pokemons?first=5&cursor=5",
       });
       const payload = res.json();
       expect(res.statusCode).toEqual(200);
       expect(payload.items.length).toEqual(5);
 
       const res2 = await app.inject({
-        url: `/pokemon?first=5&cursor=${payload.totalCount + 1}`,
+        url: `/pokemons?first=5&cursor=${payload.totalCount + 1}`,
       });
       expect(res2.statusCode).toEqual(200);
       const payload2 = res2.json();
@@ -104,7 +104,7 @@ describe("pokemon endpoints", () => {
 
     it("should return paginated pokemon listing filtered by type", async () => {
       const res = await app.inject({
-        url: "/pokemon?first=5&type=10",
+        url: "/pokemons?first=5&type=10",
       });
       const payload: { items: unknown[] } = res.json();
       expect(res.statusCode).toEqual(200);
@@ -128,7 +128,7 @@ describe("pokemon endpoints", () => {
 
     it("should return paginated pokemon listing filtered by fuzzy search", async () => {
       const res = await app.inject({
-        url: "/pokemon?first=5&search=pikachu",
+        url: "/pokemons?first=5&search=pikachu",
       });
       const payload: { items: unknown[] } = res.json();
       expect(res.statusCode).toEqual(200);
@@ -150,7 +150,7 @@ describe("pokemon endpoints", () => {
   describe("pokemon by name", () => {
     it("should find pokemon by name", async () => {
       const res = await app.inject({
-        url: "/pokemon/name/pikachu",
+        url: "/pokemons/name/pikachu",
       });
       const payload = res.json();
       expect(res.statusCode).toEqual(200);
@@ -165,7 +165,7 @@ describe("pokemon endpoints", () => {
 
     it("should return not found if name does not exist", async () => {
       const res = await app.inject({
-        url: "/pokemon/name/invalid",
+        url: "/pokemons/name/invalid",
       });
       expect(res.statusCode).toEqual(404);
     });
@@ -174,7 +174,7 @@ describe("pokemon endpoints", () => {
   describe("pokemon by id", () => {
     it("should find pokemon by id", async () => {
       const res = await app.inject({
-        url: "/pokemon/1",
+        url: "/pokemons/1",
       });
       const payload = res.json();
       expect(res.statusCode).toEqual(200);
@@ -188,7 +188,7 @@ describe("pokemon endpoints", () => {
 
     it("should return not found if id does not exist", async () => {
       const res = await app.inject({
-        url: "/pokemon/0",
+        url: "/pokemons/0",
       });
       expect(res.statusCode).toEqual(404);
     });

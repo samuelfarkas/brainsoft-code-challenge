@@ -43,9 +43,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
         description: "Code challenge backend service",
         version: "1.0.0",
       },
-      tags: [
-        { name: "pokemon", description: "pokemon related end-points" },
-      ],
+      tags: [{ name: "pokemons", description: "pokemon related end-points" }],
     },
     transform: jsonSchemaTransform,
   });
@@ -73,6 +71,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
   void fastify.register(AutoLoad, {
     dir: join(__dirname, "modules"),
     options: opts,
+    dirNameRoutePrefix: (_, folderName) => `${folderName}s`,
   });
 
   if (env.NODE_ENV === "development") {

@@ -117,7 +117,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
     "/",
     {
       schema: {
-        tags: ["pokemon"],
+        tags: ["pokemons"],
         summary: "List pokemons - supports cursor pagination",
         querystring: z.object({
           first: z.coerce.number().min(1).optional().default(10),
@@ -172,7 +172,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
     "/:id",
     {
       schema: {
-        tags: ["pokemon"],
+        tags: ["pokemons"],
         summary: "Get pokemon by name",
         params: z.object({
           id: z.coerce.number(),
@@ -209,7 +209,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
     "/name/:name",
     {
       schema: {
-        tags: ["pokemon"],
+        tags: ["pokemons"],
         summary: "Get pokemon by name",
         params: z.object({
           name: z.string(),
