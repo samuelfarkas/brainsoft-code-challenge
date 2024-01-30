@@ -173,7 +173,7 @@ const pokemon: FastifyPluginAsync = async (fastify) => {
     {
       schema: {
         tags: ["pokemons"],
-        summary: "Get pokemon by name",
+        summary: "Get pokemon by id",
         params: z.object({
           id: z.coerce.number(),
         }),

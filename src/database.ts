@@ -8,12 +8,14 @@ import config from "./mikro-orm.config";
 import { Pokemon } from "./modules/pokemon/pokemon.entity";
 import { PokemonRepository } from "./modules/pokemon/pokemon.repository";
 import { Type } from "./modules/type/type.entity";
+import { User } from "./modules/user/user.entity";
 
 export interface Services {
   orm: MikroORM;
   em: EntityManager;
   pokemon: PokemonRepository;
   type: EntityRepository<Type>;
+  user: EntityRepository<User>;
 }
 
 let cache: Services;
@@ -35,5 +37,6 @@ export async function initORM(options?: Options): Promise<Services> {
     em: orm.em,
     pokemon: orm.em.getRepository(Pokemon),
     type: orm.em.getRepository(Type),
+    user: orm.em.getRepository(User),
   });
 }

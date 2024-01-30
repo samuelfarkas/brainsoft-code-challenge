@@ -74,7 +74,12 @@ const app: FastifyPluginAsync<AppOptions> = async (
   void fastify.register(AutoLoad, {
     dir: join(__dirname, "modules"),
     options: opts,
-    dirNameRoutePrefix: (_, folderName) => `${folderName}s`,
+    dirNameRoutePrefix: (_, folderName) => {
+      if (folderName === "user") {
+        return folderName;
+      }
+      return `${folderName}s`;
+    },
   });
 
   if (env.NODE_ENV === "development") {
