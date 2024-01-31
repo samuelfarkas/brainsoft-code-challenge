@@ -1,23 +1,44 @@
-# Getting Started with [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
-This project was bootstrapped with Fastify-CLI.
+# Brainsoft BE Code Challenge solution
 
-## Available Scripts
+## How to start development server
 
-In the project directory, you can run:
+```sh
+docker compose up
+```
 
-### `npm run dev`
+- Wait for server links to show up, but server should run at http://localhost:3000
+- Swagger UI should run at http://localhost:3000/documentation
 
-To start the app in dev mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+or
 
-### `npm start`
+```sh
+yarn dev:docker or yarn dev:docker:prepare (for fresh image build)
+```
 
-For production mode
+## How to run tests
 
-### `npm run test`
+- First time running test run:
 
-Run the test cases.
+```sh
+yarn test:docker:prepare
+```
 
-## Learn More
+- Additional runs can be invoked by
 
-To learn Fastify, check out the [Fastify documentation](https://www.fastify.io/docs/latest/).
+```sh
+yarn test:docker
+```
+
+## Stop running containers, delete networks and volumes
+
+```sh
+yarn dev:docker:clean
+```
+
+```sh
+yarn test:docker:clean
+```
+
+## ER Diagram
+
+![er diagram](./er_diagram.png)
