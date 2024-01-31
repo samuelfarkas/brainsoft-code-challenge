@@ -1,5 +1,11 @@
 # Brainsoft BE Code Challenge solution
 
+## Run yarn
+- For package.json commands to work :) 
+```sh
+yarn
+```
+
 ## How to start development server
 
 ```sh
