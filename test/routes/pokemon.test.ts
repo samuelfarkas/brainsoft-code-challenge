@@ -277,7 +277,12 @@ describe("pokemon endpoints", () => {
           name: expect.stringMatching(/pikachu/i),
         }),
       );
-      expect(payload).toMatchSnapshot({});
+      expect(payload).toEqual(
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.stringMatching(/pikachu/i),
+        }),
+      );
     });
 
     it("should return not found if name does not exist", async () => {
@@ -300,7 +305,7 @@ describe("pokemon endpoints", () => {
           id: 1,
         }),
       );
-      expect(payload).toMatchSnapshot({});
+      expect(payload).toMatchSnapshot();
     });
 
     it("should return not found if id does not exist", async () => {

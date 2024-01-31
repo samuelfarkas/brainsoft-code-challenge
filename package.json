@@ -8,7 +8,12 @@
   "scripts": {
     "mikro-orm": "dotenv -c development mikro-orm",
     "mikro-orm:seed": "yarn mikro-orm migration:fresh && yarn mikro-orm seeder:run",
-    "test:docker": "docker compose run api yarn test",
+    "dev:docker:prepare": "docker compose up --build",
+    "dev:docker": "docker compose up",
+    "dev:docker:clean": "docker compose down --volumes",
+    "test:docker:prepare": "docker compose -f docker-compose.test.yml up --build -d && container_id=$(docker ps -qf \"name=api-test\") && docker wait \"$container_id\" && yarn test:docker",
+    "test:docker:clean": "docker compose -f docker-compose.test.yml down --volumes",
+    "test:docker": "docker compose -f docker-compose.test.yml run api-test yarn test",
     "test": "jest --coverage",
     "lint": "ts-standard --fix 'src/**/*.ts' 'test/**/*.ts'",
     "start": "fastify start -l info dist/app.js",

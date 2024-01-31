@@ -1,47 +1,43 @@
 version: "3.8"
 
 services:
-  db:
+  db-test:
     image: postgres:16.1-alpine3.19
     restart: always
     user: postgres
     env_file:
-      - .env.development
+      - .env.test
     volumes:
-      - db:/var/lib/postgresql/data
+      - db-test:/var/lib/postgresql/data
     expose:
       - 5432
-    ports: # external connection from host
-      - 5432:5432
     healthcheck:
       test: ["CMD", "pg_isready"]
-      interval: 5s
-      timeout: 5s
+      interval: 3s
       retries: 5
     networks:
-      - dev
-  api:
+      - test
+  api-test:
     user: "fastify-build"
     build:
       context: .
-      target: dev
+      target: test
     env_file:
-      - .env.development
+      - .env.test
     environment:
-      NODE_ENV: development
-      POSTGRES_HOST: db
+      NODE_ENV: test
+      POSTGRES_HOST: db-test
     depends_on:
-      db:
+      db-test:
         condition: service_healthy
     volumes:
       - ./src:/usr/src/app/src
-    ports:
-      - 3000:3000
+      - ./test:/usr/src/app/test
     networks:
-      - dev
+      - test
 
 volumes:
-  db:
+  db-test:
 
 networks:
-  dev:
+  test:

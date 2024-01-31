@@ -13,7 +13,6 @@ EXPOSE 3000
 
 # development stage
 FROM base as dev 
-ENV NODE_ENV development
 
 COPY .yarnrc.docker.yml .yarnrc.yml
 RUN --mount=type=bind,source=package.json,target=package.json \
@@ -26,7 +25,24 @@ RUN chown -R fastify-build:nodejs /usr/src/app
 USER fastify-build 
 COPY . .
 
-CMD yarn dev
+CMD yarn mikro-orm:seed && yarn dev
+
+# test stage
+FROM base as test 
+
+COPY .yarnrc.docker.yml .yarnrc.yml
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=yarn.lock,target=yarn.lock \
+    --mount=type=cache,target=/root/.yarn \
+    yarn install --immutable
+
+RUN chown -R fastify-build:nodejs /usr/src/app
+
+USER fastify-build 
+COPY . .
+
+CMD yarn mikro-orm:seed 
+
 
 # production stage
 FROM base as prod 
