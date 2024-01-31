@@ -3,6 +3,7 @@
 ## How to start development server
 
 ```sh
+cp .env.example .env.development
 docker compose up
 ```
 
@@ -20,6 +21,7 @@ yarn dev:docker or yarn dev:docker:prepare (for fresh image build)
 - First time running test run:
 
 ```sh
+cp .env.example .env.test
 yarn test:docker:prepare
 ```
 
