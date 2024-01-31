@@ -13,6 +13,7 @@ docker compose up
 or
 
 ```sh
+cp .env.example .env.development
 yarn dev:docker or yarn dev:docker:prepare (for fresh image build)
 ```
 
